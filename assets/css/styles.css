@@ -22,3 +22,16 @@ body {
     margin-top: 50px;
     background-color: antiquewhite;
 }
+
+.container {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    margin-left: 35px;
+    margin-top: 35px;
+    width: 200px;
+}
+#searchBar {
+    width: 200px;
+}
+
