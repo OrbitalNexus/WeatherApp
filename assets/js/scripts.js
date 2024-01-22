@@ -35,39 +35,35 @@ const weatherCondition = {
         fetch(getGeo)
             .then(res => res.json())
             .then(result => {
-                console.log('current:>>', result)
                 currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${result.coord.lat}&lon=${result.coord.lon}&appID=${apiKey}&units=imperial`;
+                  // if the information is correct 
+            if(currentUrl){
+                fetch(currentUrl)
+                .then(res => res.json())
+                .then(result => {
+                    // pass the results and search param into our functions
+                    getSearchResults(result);
+                })
+                .catch(err => console.log(err));
+            }
             })
             // same as above, but this result will be used for our 5 day forecast
             
         fetch(getGeo)
             .then(response => response.json())
             .then(result => {
-                console.log('fiveDay:>>', result);
-                fiveDayUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${result.coord.lat}&lon=${result.coord.lon}&appid=${apiKey}`;
+                fiveDayUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${result.coord.lat}&lon=${result.coord.lon}&appid=${apiKey}&units=imperial`;
+                if(fiveDayUrl){
+                    fetch(fiveDayUrl)
+                    .then(res => res.json())
+                    .then(result => {
+                        fiveDay(result);
+                    })
+                }
             })
             .catch(err => {
                 alert('Could not find a city with that name! Please try again')
             })
-            // if the information is correct 
-            if(currentUrl){
-                fetch(currentUrl)
-                .then(res => res.json())
-                .then(result => {
-                    // pass the results and search param into our functions
-                    console.log(result)
-                    getSearchResults(result);
-                })
-                .catch(err => console.log(err));
-            }
-            if(fiveDayUrl){
-                fetch(fiveDayUrl)
-                .then(res => res.json())
-                .then(result => {
-                    fiveDay(result);
-                })
-            }
-        
         }
     catch(err){
         console.log(err);
@@ -107,8 +103,38 @@ function getSearchResults(data) {
    
 
     function fiveDay(data) {
-        console.log('fiveDayData :>>', data)
-    }
+        console.log('fiveDayData :>>', data);
+        let fiveDayFinal = data.list.filter(days => days.dt_txt.includes('15:00:00'))
+        $("#dailyCard").html('');
+        fiveDayFinal.forEach(daily => {
+            let windSpeed = daily.wind.speed;
+            let temp = Math.floor(daily.main.temp);
+            let feelsLike = Math.floor(daily.main.feels_like);
+            let city = daily.name;
+            let humid = daily.main.humidity;
+            let high = Math.floor(daily.main.temp_max);
+            let low = Math.floor(daily.main.temp_min);
+            const date = new Date(daily.dt * 1000);
+            const currentDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+            let getIcon = daily.weather[0].icon;
+            let icon = weatherCondition[getIcon];
+
+            let dailyCard =
+                `<div class="cardDaily">
+                <h3>(${currentDate}) <img src='${icon}'></h3>
+                <p>Current Temp: ${temp}°F</p>
+                <p>Feels like: ${feelsLike}</p>
+                <p>Humidity: ${humid}</p>
+                <p>Wind Speed: ${windSpeed}mph</p>
+                <p>High: ${high}°F</p>
+                <p>Low: ${low}°F</p>
+                </div>
+                `
+        $("#dailyCard").append(dailyCard);
+        });
+        console.log(fiveDayFinal);
+            
+        }
 
 function searchCity(event) {
   event.preventDefault();  
