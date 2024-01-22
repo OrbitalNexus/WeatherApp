@@ -35,3 +35,17 @@ body {
     width: 200px;
 }
 
+.mainContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+#weatherCard {
+    border: 2px solid black;
+    width: 20%;
+    height: auto;
+    background-color: antiquewhite;
+    margin-left: 50px;
+    padding: 10px;
+    margin-top: 10px;
+}
