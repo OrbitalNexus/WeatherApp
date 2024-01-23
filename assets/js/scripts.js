@@ -68,7 +68,7 @@ const weatherCondition = {
     catch(err){
         console.log(err);
     }
-
+    addToSearchHistory(city);
 }
 
 function getSearchResults(data) {
@@ -138,24 +138,81 @@ function getSearchResults(data) {
             
         }
 
-function storageLocal(city) {
-    let historyArray = []
-    historyArray.push(city);
-    historyArray = localStorage.setItem(city, JSON.stringify(historyArray));
-    let item = JSON.parse(localStorage.getItem(city)) || [];
-    console.log(item);
-    item.forEach(searchHistory => {
-      let historySearch = 
-      `<div class="buttonHistory">
-      <button class="btnHistory">${searchHistory}</button>    
-      </div>`
-      $("#history2").append(historySearch);
-      $(".btnHistory").on("click", function(e) {
-       getCity($(this).html());
-     })
+// function storageLocal(city) {
+//     let historyArray = []
+//     historyArray.push(city);
+//     historyArray = localStorage.setItem(city, JSON.stringify(historyArray));
+//     let item = JSON.parse(localStorage.getItem(city)) || [];
+//     console.log(item);
+//     item.forEach(searchHistory => {
+//       let historySearch = 
+//       `<div class="buttonHistory">
+//       <button class="btnHistory">${searchHistory}</button>    
+//       </div>`
+//       $("#history2").append(historySearch);
+//       $(".btnHistory").on("click", function(e) {
+//        getCity($(this).html());
+//      })
       
-});
+// });
+// }
+
+const addToSearchHistory = city => {
+    let history = getSearchHistory();
+    let newHist = [];
+
+    if(history){
+        newHist = history.filter(item =>{
+            return item !== city
+        })
+    }
+    // adding new city to the front of the array
+    newHist.unshift(city);
+    // if the new history gets bigger than 10 remove the last search stored
+    if(newHist.length > 7) newHist.pop();
+
+    localStorage.setItem('history', JSON.stringify(newHist));
+
+    historyButton();
 }
+// getting the history or array from local storage and returning it
+const getSearchHistory = () => {
+    const history = JSON.parse(localStorage.getItem('history')) || [];
+    return history;
+}
+
+/*const searchSubmitHandler = () => {
+    const search = $('#search-input').val();
+    
+    // forecastSearch(search);
+    if(search){
+        forecastSearch(search);
+        $('#search-input').val('')
+    }
+} */
+
+// button to display searched cities and show them as a button to be searched again
+const historyButton = () => {
+    const history = JSON.parse(localStorage.getItem('history'));
+
+    $('#history2').html('');
+
+    if(history){
+        history.forEach((item) => {
+            const html = `<button class='hist-btn'>${item}</button>`;
+
+            $('#history2').append(html);
+        })
+    }
+
+    $('.hist-btn').on('click', function(e){
+        getCity($(this).html());
+    });
+}
+
+historyButton();
+
+
 
 function searchCity(event) {
   event.preventDefault();  
