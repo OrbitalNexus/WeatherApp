@@ -25,7 +25,6 @@ body {
 
 .container {
     display: flex;
-    justify-content: flex-start;
     flex-direction: column;
     margin-left: 35px;
     margin-top: 35px;
@@ -42,7 +41,7 @@ body {
 
 #weatherCard {
     border: 2px solid black;
-    width: auto;
+    width: 430px;
     height: 450px;
     background-color: antiquewhite;
     margin-left: 50px;
@@ -70,6 +69,21 @@ body {
 .weather {
     display: flex;
     flex-direction: column;
+}
+
+#history {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    background-color: antiquewhite;
+    height: auto;
+}
+
+#history2 {
+    display: flex;
+    flex-direction: column;
+    
 }
 
 

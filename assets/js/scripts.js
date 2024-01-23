@@ -98,6 +98,8 @@ function getSearchResults(data) {
 
         $("#weatherCard").html('');
         $("#weatherCard").append(card);
+
+        storageLocal(city);
         
     };
    
@@ -136,12 +138,36 @@ function getSearchResults(data) {
             
         }
 
+function storageLocal(city) {
+    let historyArray = []
+    historyArray.push(city);
+    historyArray = localStorage.setItem(city, JSON.stringify(historyArray));
+    let item = JSON.parse(localStorage.getItem(city)) || [];
+    console.log(item);
+    item.forEach(searchHistory => {
+      let historySearch = 
+      `<div class="buttonHistory">
+      <button class="btnHistory">${searchHistory}</button>    
+      </div>`
+      $("#history2").append(historySearch);
+      $(".btnHistory").on("click", function(e) {
+       getCity($(this).html());
+     })
+      
+});
+}
+
 function searchCity(event) {
   event.preventDefault();  
-  let searchedCity = citySearch.value
-  console.log('searchedCity =>', searchedCity)
+  let searchedCity = citySearch.value;
+  console.log('searchedCity =>', searchedCity);
   getCity(searchedCity);
-}
+
+  };
+  
+ 
+
+
 
 
 
